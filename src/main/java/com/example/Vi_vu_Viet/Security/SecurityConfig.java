@@ -38,7 +38,7 @@ public class SecurityConfig {
                                 "/api/v1/auth/login",
                                 "/api/v1/auth/refresh"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/Hello").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/Hello", "/api/v1/areas", "/api/v1/trips", "/api/v1/trips/**").permitAll()
                         .requestMatchers(
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
