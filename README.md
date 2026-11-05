@@ -1,9 +1,21 @@
-# ViVuViet backend — Sprint 1, mốc xác thực
+# ViVuViet backend — Sprint 1
 
-Chạy `docker compose up --build` với Docker Compose; không cần `.env` khi dùng cấu hình mặc định. Swagger: http://localhost:8080/swagger-ui.html; health: http://localhost:8080/Hello. Chạy kiểm thử bằng `./mvnw test` hoặc `mvnw.cmd test`.
+Yêu cầu Docker và Docker Compose. Chạy `docker compose up --build` từ thư mục dự án; không cần `.env` khi dùng mặc định.
 
-Mốc này hỗ trợ đăng ký, đăng nhập, làm mới token, đăng xuất, thông tin tài khoản và danh sách hãng của tài khoản. Chưa có API tuyến đường hoặc chuyến xe.
+- Swagger: http://localhost:8080/swagger-ui.html
+- Kiểm tra ứng dụng: http://localhost:8080/Hello
+- Chạy kiểm thử: `./mvnw test` hoặc `mvnw.cmd test`.
 
-Trong Swagger dùng `/api/v1/auth/register` tạo tài khoản với `wsRequest` chứa `fullName`, `email`, `password` (ít nhất 8 ký tự, có chữ hoa, chữ thường, số và ký tự đặc biệt). Gọi `/api/v1/auth/login` với `wsRequest` gồm `identifier` và `password`; dùng access token nhận được qua nút Authorize để gọi `/api/v1/me`.
+## Dữ liệu demo
 
-Volume PostgreSQL cũ có thể có thông tin đăng nhập khác cấu hình hiện tại; kiểm tra volume trước khi thay đổi.
+Lần đầu khởi động với database mới, ứng dụng tạo hãng ViVuViet Demo, tài khoản quản trị `admin@vivuviet.demo` / `Demo1234!`, khu vực Hà Nội và Đà Nẵng cùng một tuyến có giá. Dữ liệu này chỉ dùng cho môi trường phát triển; seed không chạy với profile test. Đặt `APP_SEED_DEMO_DATA=false` để tắt seed. Nếu dùng volume PostgreSQL cũ, kiểm tra thông tin đăng nhập database trước khi thay đổi.
+
+## Demo
+
+1. Mở Swagger, đăng nhập tại `POST /api/v1/auth/login` với `wsRequest` gồm `identifier` và `password`; chọn Authorize và nhập access token.
+2. Gọi `GET /api/v1/me/companies` lấy company ID và `GET /api/v1/areas` lấy ID khu vực đi, đến.
+3. Gọi `POST /api/v1/bus-companies/{company_id}/routes` để tạo tuyến mới, nhập khu vực, khoảng cách, thời lượng và giá dương.
+4. Gọi `POST /api/v1/bus-companies/{company_id}/trips` với ID tuyến, mã chuyến, thời gian khởi hành và đến dự kiến trong tương lai. Gọi tiếp `POST .../trips/{trip_id}/publish`.
+5. Gọi `GET /api/v1/trips` với khu vực đi, đến và ngày khởi hành để tìm chuyến.
+
+API trong mốc này gồm đăng ký, đăng nhập, phân quyền cơ bản, khu vực, tuyến đường, chuyến xe và tìm kiếm.
